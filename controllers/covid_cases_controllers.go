@@ -40,7 +40,7 @@ func GetCovidCases(c echo.Context) error {
 		cache.Set(&location, result)
 	}
 	fmt.Println(*result)
-	return c.JSON(http.StatusBadRequest, *result)
+	return c.JSON(http.StatusAccepted, *result)
 }
 func GetData(city string) (models.Response, error) {
 	result := models.Response{}

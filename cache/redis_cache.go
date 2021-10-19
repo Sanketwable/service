@@ -26,7 +26,7 @@ func NewRedisCache(host string, db int, exp time.Duration) CovidCache {
 func (cache *redisCache) GetClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr: cache.host,
-		Password: "",
+		Password: "0MEbNW8gM3zDoaKtDWwjy6WfkQK5zJ9X",
 		DB: cache.db,
 	})
 }

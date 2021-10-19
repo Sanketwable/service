@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"os"
 	"service/config"
 	"service/router"
 )
@@ -11,11 +12,11 @@ func Run() {
 	fmt.Println("config file loaded")
 	
 	fmt.Println("DB loaded")
-	fmt.Printf("\n\tListening.......[::]:%d \n", config.PORT)
-	Listen(config.PORT)
+	fmt.Printf("\n\tListening.......[::]:%s \n", os.Getenv("PORT") )
+	Listen(os.Getenv("PORT"))
 }
 
-func Listen(port int) {
+func Listen(port string) {
 	e := router.New()
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }
