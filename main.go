@@ -5,6 +5,5 @@ import (
 )
 
 func main() {
-	// repository.AddData()
 	server.Run()
 }
