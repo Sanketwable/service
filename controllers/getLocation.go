@@ -49,6 +49,5 @@ func GetStateDistrict(lat float64, lon float64) (string, string, string, string)
 	}
 
 	return district, state, stateAncr, country
-	// return "Biswanath", "maharashtra", "MH", "india"
 
 }

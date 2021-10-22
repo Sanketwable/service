@@ -83,28 +83,51 @@ func FetchCases(c echo.Context) error {
 		fR.Error = "No Data found"
 		return c.JSON(http.StatusCreated, fR)
 	}
+
+	storeRes := []interface{}{}
+	for _, ele := range data {
+		for _, e := range ele.Data {
+			m := models.Response{}
+			m.StateName = ele.State
+			m.ActiveNo = int32(e.Active)
+			m.ConfirmedNo = int32(e.Confirmed)
+			m.DeceasedNo = int32(e.Deceased)
+			m.District = e.Name
+			m.RecoveredNo = int32(e.Recovered)
+			storeRes = append(storeRes, m)
+		}
+
+	}
 	collection := client.Database("Service")
 	if err := collection.Drop(ctx); err != nil {
 		fmt.Println("error droping db")
 		fmt.Println(err)
 	}
+
 	CovidCollection := collection.Collection("CovidData")
-	for _, ele := range data {
-		for _, element := range ele.Data {
-			CovidResult, err := CovidCollection.InsertOne(ctx, bson.D{
-				{Key: "state", Value: ele.State},
-				{Key: "district", Value: element.Name},
-				{Key: "active", Value: element.Active},
-				{Key: "confirmed", Value: element.Confirmed},
-				{Key: "deceased", Value: element.Deceased},
-				{Key: "recovered", Value: element.Recovered},
-			})
-			if err != nil {
-				fmt.Println(err)
-			}
-			fmt.Println(CovidResult)
-		}
+	CovidResult, err := CovidCollection.InsertMany(ctx, storeRes)
+	if err != nil {
+		fmt.Println(err)
 	}
+	fmt.Println(CovidResult)
+
+
+	// for _, ele := range data {
+	// 	for _, element := range ele.Data {
+	// 		CovidResult, err := CovidCollection.InsertOne(ctx, bson.M{
+	// 			"state", Value: ele.State,
+	// 			"district", Value: element.Name,
+	// 			"active", Value: element.Active,
+	// 			"confirmed", Value: element.Confirmed,
+	// 			"deceased", Value: element.Deceased,
+	// 			"recovered", Value: element.Recovered,
+	// 		})
+	// 		if err != nil {
+	// 			fmt.Println(err)
+	// 		}
+	// 		fmt.Println(CovidResult)
+	// 	}
+	// }
 	fR := fetchResponse{}
 	fR.Message = "data successfully fetched from api"
 	fR.Error = "nil"
